@@ -18,7 +18,9 @@ defmodule Bitmex.Mixfile do
   end
 
   defp deps do
-    [{:websocket_client, "~> 1.2.1"}, {:poison, "~> 3.1.0"}]
+    [{:ex_doc, ">= 0.0.0", only: :dev},
+     {:websocket_client, "~> 1.2.1"},
+     {:poison, "~> 3.1.0"}]
   end
 
   defp package do
