@@ -1,13 +1,13 @@
 defmodule Bitmex.WS do
   require Logger
-  import Application, only: [get_env: 2]
+  import Application, only: [get_env: 3]
 
   @behaviour :websocket_client
 
   @fsm_name {:local, __MODULE__}
   @base "wss://www.bitmex.com/realtime?heartbeat=true"
-  @instrument get_env(:bitmex, :instrument) || "XBTUSD"
-  @heartbeat_interval get_env(:bitmex, :heartbeat_interval) || 7_000
+  @instrument get_env(:bitmex, :instrument, "XBTUSD")
+  @heartbeat_interval get_env(:bitmex, :heartbeat_interval, 7_000)
 
   ## API
 
@@ -18,15 +18,15 @@ defmodule Bitmex.WS do
   end
 
   def send_op(server \\ __MODULE__, op, args) do
-    :websocket_client.send(server, {:text, encode(op, args)} |> IO.inspect)
+    :websocket_client.send(server, {:text, encode(op, args)})
   end
 
   def cast_op(server \\ __MODULE__, op, args) do
-    :websocket_client.cast(server, {:text, encode(op, args)} |> IO.inspect)
+    :websocket_client.cast(server, {:text, encode(op, args)})
   end
 
   def subscribe(server \\ __MODULE__) do
-    cast_op(server, "subscribe", ["orderBook10:#{@instrument}"])
+    cast_op(server, "subscribe", ["orderBook10:" <> @instrument])
   end
 
   ## Callbacks
