@@ -6,7 +6,6 @@ defmodule Bitmex.Rest.Client do
   @api_host "https://www.bitmex.com"
   @api_path "/api/v1"
   @api_uri @api_host <> @api_path
-  @nonce_shift 1484899880000000
 
   def auth_get(uri) do
     get(uri, auth_headers("GET", uri))
@@ -35,12 +34,11 @@ defmodule Bitmex.Rest.Client do
   ## Helpers
 
   defp auth_headers(verb, uri, data \\ "") do
-    nonce = nonce()
+    nonce = Bitmex.Auth.nonce()
     sig = Bitmex.Auth.sign(@api_secret, verb, @api_path <> uri, nonce, data)
-    ["api-nonce": "#{nonce}", "api-key": @api_key, "api-signature": sig]
+    ["api-nonce": to_string(nonce), "api-key": @api_key, "api-signature": sig]
   end
 
-  defp nonce, do: :os.system_time(:micro_seconds) - @nonce_shift
 
   ## HTTPoison callbacks
 

@@ -4,6 +4,9 @@ defmodule Bitmex.WS do
       require Logger
 
       @behaviour :websocket_client
+
+      @api_key Application.get_env(:bitmex, :api_key)
+      @api_secret Application.get_env(:bitmex, :api_secret)
       @fsm_name {:local, __MODULE__}
       @base "wss://www.bitmex.com/realtime?heartbeat=true"
       @heartbeat Application.get_env(:bitmex, :heartbeat_interval, 7_000)
@@ -27,16 +30,27 @@ defmodule Bitmex.WS do
         cast_op(server, "subscribe", channels)
       end
 
+      def authenticate(server) do
+        nonce = Bitmex.Auth.nonce()
+        sig = Bitmex.Auth.sign(@api_secret, "GET", "/realtime", nonce, "")
+        cast_op(server, "authKey", [@api_key, nonce, sig])
+      end
+
       ## Callbacks
 
       def init(args) do
         subscription = Map.get(args, :subscribe, ["orderBook10:XBTUSD"])
-        {:once, %{subscribe: subscription}}
+        auth_subscription = Map.get(args, :auth_subscribe, ["position:XBTUSD"])
+        {:once, %{subscribe: subscription, auth_subscribe: auth_subscription}}
       end
 
-      def onconnect(_ws_req, %{subscribe: subscription} = state) do
+      def onconnect(_ws_req, %{subscribe: subscription,
+                               auth_subscribe: auth_subscription} = state) do
         Logger.info("Bitmex.WS connected")
         subscribe(self(), subscription)
+        if match?([_|_], auth_subscription) do
+          authenticate(self())
+        end
         {:ok, state, @heartbeat}
       end
 
@@ -54,10 +68,16 @@ defmodule Bitmex.WS do
         {:ok, state}
       end
 
-      def websocket_handle(msg, _conn_state, state) do
+      def websocket_handle(msg, _conn_state,
+                           %{auth_subscribe: auth_subscription} = state) do
         with {:text, text} <- msg,
              {:ok, resp}   <- Poison.Parser.parse(text) do
-          handle_response(resp)
+          case resp do
+            %{"request" => %{"op" => "authKey"}, "success" => true} ->
+              subscribe(self(), auth_subscription)
+            _ ->
+              handle_response(resp)
+          end
         else
           e ->
             Logger.warn("Bitmex.WS received unexpected response: #{inspect e}")
@@ -71,7 +91,8 @@ defmodule Bitmex.WS do
       end
 
       def websocket_terminate(reason, _conn_state, state) do
-        Logger.warn("Bitmex.WS closed in #{inspect state} with #{inspect reason}")
+        Logger.warn("Bitmex.WS closed in state #{inspect state} " <>
+                    "with reason #{inspect reason}")
         :ok
       end
 
