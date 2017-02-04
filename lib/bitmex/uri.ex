@@ -7,6 +7,8 @@ defmodule Bitmex.URI do
     |> String.replace(":", "%3A")
   end
 
+  def encode_query([]), do: ""
+
   def encode_query(enum) do
     Enum.map_join(enum, "&", fn {k, v} -> encode(k) <> "=" <> encode(v) end)
   end

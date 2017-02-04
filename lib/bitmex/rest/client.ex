@@ -1,20 +1,45 @@
 defmodule Bitmex.Rest.Client do
   use HTTPoison.Base
+  import Bitmex.URI, only: [encode_query: 1]
 
+  @compile {:inline, uri_with_query: 2, auth_request: 3}
   @api_key Application.get_env(:bitmex, :api_key)
   @api_secret Application.get_env(:bitmex, :api_secret)
   @api_host "https://www.bitmex.com"
   @api_path "/api/v1"
   @api_uri @api_host <> @api_path
 
-  def auth_get(uri) do
-    get(uri, auth_headers("GET", uri))
+  def non_auth_get(uri, params \\ []) do
+    uri |> uri_with_query(params) |> get
+  end
+
+  def auth_get(uri, params \\ []) do
+    query = uri_with_query(uri, params)
+    get(query, auth_headers("GET", query))
   end
 
   def auth_post(uri, params) do
-    body = Bitmex.URI.encode_query(params)
-    headers = "POST" |> auth_headers(uri, body) |> put_content_type(:params)
-    post(uri, body, headers)
+    auth_request(:post, uri, params)
+  end
+
+  def auth_put(uri, params) do
+    auth_request(:put, uri, params)
+  end
+
+  def auth_delete(uri, params) do
+    auth_request(:delete, uri, params)
+  end
+
+  def auth_request(verb, uri, params)
+  when verb in [:post, :put, :delete] do
+    body = encode_query(params)
+    headers =
+      verb
+      |> to_string
+      |> String.upcase
+      |> auth_headers(uri, body)
+      |> put_content_type(:params)
+    request(verb, uri, body, headers, [])
   end
 
   def auth_post_via_json(uri, params) do
@@ -30,6 +55,8 @@ defmodule Bitmex.Rest.Client do
   defp put_content_type(headers, :json) do
     Keyword.put(headers, :"Content-Type", "application/json")
   end
+
+  def uri_with_query(uri, params), do: "#{uri}?#{encode_query(params)}"
 
   ## Helpers
 
