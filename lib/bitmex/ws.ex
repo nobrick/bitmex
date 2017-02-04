@@ -1,15 +1,18 @@
 defmodule Bitmex.WS do
+  @moduledoc """
+  BitMEX WebSocket client.
+  """
+
+  import Logger, only: [info: 1, warn: 1]
+
   defmacro __using__(_opts) do
     quote do
-      require Logger
-
       @behaviour :websocket_client
-
       @api_key Application.get_env(:bitmex, :api_key)
       @api_secret Application.get_env(:bitmex, :api_secret)
       @fsm_name {:local, __MODULE__}
       @base "wss://www.bitmex.com/realtime?heartbeat=true"
-      @heartbeat Application.get_env(:bitmex, :heartbeat_interval, 7_000)
+      @heartbeat Application.get_env(:bitmex, :heartbeat_interval, 5_000)
 
       ## API
       def start_link(args \\ %{}) do
@@ -46,7 +49,7 @@ defmodule Bitmex.WS do
 
       def onconnect(_ws_req, %{subscribe: subscription,
                                auth_subscribe: auth_subscription} = state) do
-        Logger.info("Bitmex.WS connected")
+        info("#{__MODULE__} connected")
         subscribe(self(), subscription)
         if match?([_|_], auth_subscription) do
           authenticate(self())
@@ -55,12 +58,12 @@ defmodule Bitmex.WS do
       end
 
       def ondisconnect(:normal, state) do
-        Logger.info("Bitmex.WS disconnected with reason :normal")
+        info("#{__MODULE__} disconnected with reason :normal")
         {:ok, state}
       end
 
       def ondisconnect(reason, state) do
-        Logger.warn("Bitmex.WS disconnected with #{inspect reason}. Reconnecting")
+        warn("#{__MODULE__} disconnected: #{inspect reason}. Reconnecting")
         {:reconnect, state}
       end
 
@@ -80,24 +83,24 @@ defmodule Bitmex.WS do
           end
         else
           e ->
-            Logger.warn("Bitmex.WS received unexpected response: #{inspect e}")
+            warn("#{__MODULE__} received unexpected response: #{inspect e}")
         end
         {:ok, state}
       end
 
       def websocket_info(msg, _conn_state, state) do
-        Logger.warn("Bitmex.WS received unexpected erlang msg: #{inspect msg}")
+        warn("#{__MODULE__} received unexpected erlang msg: #{inspect msg}")
         {:ok, state}
       end
 
       def websocket_terminate(reason, _conn_state, state) do
-        Logger.warn("Bitmex.WS closed in state #{inspect state} " <>
-                    "with reason #{inspect reason}")
+        warn("#{__MODULE__} closed in state #{inspect state} " <>
+             "with reason #{inspect reason}")
         :ok
       end
 
       def handle_response(resp) do
-        Logger.info("Bitmex.WS received response: #{inspect resp}")
+        info("#{__MODULE__} received response: #{inspect resp}")
       end
 
       defoverridable Module.definitions_in(__MODULE__)
