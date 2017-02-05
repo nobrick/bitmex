@@ -53,7 +53,7 @@ defmodule Bitmex.Rest do
     @doc """
     Cancels all of your orders.
     """
-    def delete_all(params) do
+    def delete_all(params \\ []) do
       auth_delete("/order/all", params)
     end
 
@@ -178,8 +178,10 @@ defmodule Bitmex.Rest do
   defmodule OrderBook do
     @doc """
     Get current orderbook in vertical format.
+
+    `symbol` is a required argument.
     """
-    def get(params \\ []) do
+    def get(params) do
       non_auth_get("/orderBook/L2", params)
     end
   end

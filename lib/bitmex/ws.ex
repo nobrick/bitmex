@@ -119,6 +119,6 @@ defmodule Bitmex.WS do
   end
 
   def encode(op, args) do
-    %{op: op, args: args} |> Poison.Encoder.encode([]) |> IO.iodata_to_binary
+    Poison.encode!(%{op: op, args: args})
   end
 end

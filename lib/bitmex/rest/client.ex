@@ -2,7 +2,6 @@ defmodule Bitmex.Rest.Client do
   use HTTPoison.Base
   import Bitmex.URI, only: [encode_query: 1]
 
-  @compile {:inline, uri_with_query: 2, auth_request: 3}
   @api_key Application.get_env(:bitmex, :api_key)
   @api_secret Application.get_env(:bitmex, :api_secret)
   @api_host "https://www.bitmex.com"
@@ -43,7 +42,7 @@ defmodule Bitmex.Rest.Client do
   end
 
   def auth_post_via_json(uri, params) do
-    body = params |> Poison.Encoder.encode([]) |> IO.iodata_to_binary
+    body = Poison.encode!(params)
     headers = "POST" |> auth_headers(uri, body) |> put_content_type(:json)
     post(uri, body, headers)
   end
@@ -56,13 +55,16 @@ defmodule Bitmex.Rest.Client do
     Keyword.put(headers, :"Content-Type", "application/json")
   end
 
+  def uri_with_query(uri, []), do: uri
+  def uri_with_query(uri, %{}), do: uri
   def uri_with_query(uri, params), do: "#{uri}?#{encode_query(params)}"
 
   ## Helpers
 
-  defp auth_headers(verb, uri, data \\ "") do
+  defp auth_headers(verb, encoded_uri, data \\ "") do
     nonce = Bitmex.Auth.nonce()
-    sig = Bitmex.Auth.sign(@api_secret, verb, @api_path <> uri, nonce, data)
+    sig = Bitmex.Auth.sign(@api_secret, verb, @api_path <> encoded_uri,
+                           nonce, data)
     ["api-nonce": to_string(nonce), "api-key": @api_key, "api-signature": sig]
   end
 

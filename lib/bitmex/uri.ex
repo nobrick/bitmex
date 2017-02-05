@@ -1,4 +1,8 @@
 defmodule Bitmex.URI do
+  def encode(value) when is_map(value) or is_list(value) do
+    value |> Poison.encode! |> encode
+  end
+
   def encode(value) do
     value
     |> to_string
