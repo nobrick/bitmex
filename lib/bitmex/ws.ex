@@ -11,14 +11,20 @@ defmodule Bitmex.WS do
       @api_key Application.get_env(:bitmex, :api_key)
       @api_secret Application.get_env(:bitmex, :api_secret)
       @fsm_name {:local, __MODULE__}
-      @base "wss://www.bitmex.com/realtime?heartbeat=true"
-      @heartbeat Application.get_env(:bitmex, :heartbeat_interval, 5_000)
+      @base "wss://www.bitmex.com/realtime"
+      @ping_interval Application.get_env(:bitmex, :ping_interval, 5_000)
 
       ## API
       def start_link(args \\ %{}) do
         :crypto.start()
         :ssl.start()
-        :websocket_client.start_link(@fsm_name, @base, __MODULE__, args, [])
+        base =
+          if args[:remote_heartbeat] do
+            @base <> "?heartbeat=true"
+          else
+            @base
+          end
+        :websocket_client.start_link(@fsm_name, base, __MODULE__, args, [])
       end
 
       def send_op(server, op, args) do
@@ -42,19 +48,24 @@ defmodule Bitmex.WS do
       ## Callbacks
 
       def init(args) do
-        subscription = Map.get(args, :subscribe, ["orderBook10:XBTUSD"])
-        auth_subscription = Map.get(args, :auth_subscribe, ["position:XBTUSD"])
-        {:once, %{subscribe: subscription, auth_subscribe: auth_subscription}}
+        subscription = args[:subscribe] || ["orderBook10:XBTUSD"]
+        auth_subscription = args[:auth_subscribe] || []
+        ping_interval = args[:ping_interval] || @ping_interval
+        {:once, %{subscribe: subscription, auth_subscribe: auth_subscription,
+                  ping_interval: ping_interval}}
       end
 
       def onconnect(_ws_req, %{subscribe: subscription,
-                               auth_subscribe: auth_subscription} = state) do
+                               auth_subscribe: auth_subscription,
+                               ping_interval: ping_interval} = state) do
         info("#{__MODULE__} connected")
-        subscribe(self(), subscription)
+        if match?([_|_], subscription) do
+          subscribe(self(), subscription)
+        end
         if match?([_|_], auth_subscription) do
           authenticate(self())
         end
-        {:ok, state, @heartbeat}
+        {:ok, state, ping_interval}
       end
 
       def ondisconnect(:normal, state) do
