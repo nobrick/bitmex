@@ -14,7 +14,7 @@ defmodule Bitmex.Rest.Client do
 
   def auth_get(uri, params \\ []) do
     query = uri_with_query(uri, params)
-    get(query, auth_headers("GET", query))
+    get(query, auth_headers(:get, query))
   end
 
   def auth_post(uri, params) do
@@ -29,22 +29,18 @@ defmodule Bitmex.Rest.Client do
     auth_request(:delete, uri, params)
   end
 
-  def auth_request(verb, uri, params)
-  when verb in [:post, :put, :delete] do
+  def auth_request(verb, uri, params, via \\ :json)
+
+  def auth_request(verb, uri, params, :url_encoding) do
     body = encode_query(params)
-    headers =
-      verb
-      |> to_string
-      |> String.upcase
-      |> auth_headers(uri, body)
-      |> put_content_type(:params)
+    headers = verb |> auth_headers(uri, body) |> put_content_type(:params)
     request(verb, uri, body, headers, [])
   end
 
-  def auth_post_via_json(uri, params) do
+  def auth_request(verb, uri, params, :json) do
     body = Poison.encode!(params)
-    headers = "POST" |> auth_headers(uri, body) |> put_content_type(:json)
-    post(uri, body, headers)
+    headers = verb |> auth_headers(uri, body) |> put_content_type(:json)
+    request(verb, uri, body, headers, [])
   end
 
   defp put_content_type(headers, :params) do
@@ -62,12 +58,16 @@ defmodule Bitmex.Rest.Client do
   ## Helpers
 
   defp auth_headers(verb, encoded_uri, data \\ "") do
+    verb_string = to_verb_string(verb)
     nonce = Bitmex.Auth.nonce()
-    sig = Bitmex.Auth.sign(@api_secret, verb, @api_path <> encoded_uri,
+    sig = Bitmex.Auth.sign(@api_secret, verb_string, @api_path <> encoded_uri,
                            nonce, data)
     ["api-nonce": to_string(nonce), "api-key": @api_key, "api-signature": sig]
   end
 
+  defp to_verb_string(verb) do
+    verb |> to_string |> String.upcase
+  end
 
   ## HTTPoison callbacks
 
