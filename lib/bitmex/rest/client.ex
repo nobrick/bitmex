@@ -56,7 +56,7 @@ defmodule Bitmex.Rest.Client do
   end
 
   def uri_with_query(uri, []), do: uri
-  def uri_with_query(uri, %{}), do: uri
+  def uri_with_query(uri, map) when is_map(map) and map_size(map) == 0, do: uri
   def uri_with_query(uri, params), do: "#{uri}?#{encode_query(params)}"
 
   ## Helpers
