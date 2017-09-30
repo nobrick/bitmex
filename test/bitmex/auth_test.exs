@@ -10,7 +10,8 @@ defmodule Bitmex.AuthTest do
     data = ""
     signature =
       "9f1753e2db64711e39d111bc2ecace3dc9e7f026e6f65b65c4f53d3d14a60e5f"
-    assert Bitmex.Auth.sign(@api_secret, verb, path, nonce, data) == signature
+    uri = Bitmex.URI.encode_query(path)
+    assert Bitmex.Auth.sign(@api_secret, verb, uri, nonce, data) == signature
   end
 
   test "POST authentication" do

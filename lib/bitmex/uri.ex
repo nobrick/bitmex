@@ -13,6 +13,8 @@ defmodule Bitmex.URI do
 
   def encode_query([]), do: ""
 
+  def encode_query(value) when is_binary(value), do: encode(value)
+
   def encode_query(enum) do
     Enum.map_join(enum, "&", fn {k, v} -> encode(k) <> "=" <> encode(v) end)
   end
