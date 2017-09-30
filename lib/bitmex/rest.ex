@@ -11,8 +11,19 @@ defmodule Bitmex.Rest do
     @doc """
     Get your orders.
     """
-    def get(params \\ []) do
+    def get(params \\ %{}) do
       auth_get("/order", params)
+    end
+
+    @doc """
+    Get your open orders.
+    """
+    def get_open(params \\ %{}) do
+      new_params =
+        params
+        |> Map.put_new(:filter, %{})
+        |> put_in([:filter, :open], true)
+      auth_get("/order", new_params)
     end
 
     @doc """
@@ -24,6 +35,14 @@ defmodule Bitmex.Rest do
 
     @doc """
     Create multiple new orders.
+
+    ## Example
+
+        iex> p1 = %{"symbol" => "XBTUSD", "side" => "Buy", "orderQty" => 15,
+          "price" => Float.floor(4000.1, 1), "ordType" => "Limit"}
+        iex> p2 = %{"symbol" => "XBTUSD", "side" => "Buy", "orderQty" => 15,
+          "price" => 4100.2, "ordType" => "Limit"}
+        iex> Bitmex.Rest.Order.create_bulk(%{orders: [p1, p2]})
     """
     def create_bulk(params) do
       auth_post("/order/bulk", params)
@@ -53,7 +72,7 @@ defmodule Bitmex.Rest do
     @doc """
     Cancels all of your orders.
     """
-    def delete_all(params \\ []) do
+    def delete_all(params \\ %{}) do
       auth_delete("/order/all", params)
     end
 
@@ -69,7 +88,7 @@ defmodule Bitmex.Rest do
     @doc """
     Get your positions.
     """
-    def get(params \\ []) do
+    def get(params \\ %{}) do
       auth_get("/position", params)
     end
 
@@ -124,14 +143,14 @@ defmodule Bitmex.Rest do
     @doc """
     Get your user model.
     """
-    def get(params \\ []) do
+    def get(params \\ %{}) do
       auth_get("/user", params)
     end
 
     @doc """
     Get your account's commission status.
     """
-    def commission(params \\ []) do
+    def commission(params \\ %{}) do
       auth_get("/user/commission", params)
     end
 
@@ -140,28 +159,28 @@ defmodule Bitmex.Rest do
     
     Send a currency of "all" to receive an array of all supported currencies.
     """
-    def margin(params \\ []) do
+    def margin(params \\ %{}) do
       auth_get("/user/margin", params)
     end
 
     @doc """
     Get your current wallet information.
     """
-    def wallet(params \\ []) do
+    def wallet(params \\ %{}) do
       auth_get("/user/wallet", params)
     end
 
     @doc """
     Get a history of all of your wallet transactions.
     """
-    def wallet_history(params \\ []) do
+    def wallet_history(params \\ %{}) do
       auth_get("/user/walletHistory", params)
     end
 
     @doc """
     Get a summary of all of your wallet transactions.
     """
-    def wallet_summary(params \\ []) do
+    def wallet_summary(params \\ %{}) do
       auth_get("/user/walletSummary", params)
     end
   end
@@ -170,7 +189,7 @@ defmodule Bitmex.Rest do
     @doc """
     Get liquidation orders
     """
-    def get(params \\ []) do
+    def get(params \\ %{}) do
       non_auth_get("/liquidation", params)
     end
   end
@@ -190,7 +209,7 @@ defmodule Bitmex.Rest do
     @doc """
     Get funding history.
     """
-    def get(params \\ []) do
+    def get(params \\ %{}) do
       non_auth_get("/funding", params)
     end
   end
@@ -199,14 +218,14 @@ defmodule Bitmex.Rest do
     @doc """
     Get quotes.
     """
-    def get(params \\ []) do
+    def get(params \\ %{}) do
       non_auth_get("/quote", params)
     end
 
     @doc """
     Get previous quotes in time buckets.
     """
-    def bucketed(params \\ []) do
+    def bucketed(params \\ %{}) do
       non_auth_get("/quote/bucketed", params)
     end
   end
@@ -215,7 +234,7 @@ defmodule Bitmex.Rest do
     @doc """
     Get settlement history.
     """
-    def get(params \\ []) do
+    def get(params \\ %{}) do
       non_auth_get("/settlement", params)
     end
   end
@@ -224,7 +243,7 @@ defmodule Bitmex.Rest do
     @doc """
     Get exchange-wide and per-series turnover and volume statistics.
     """
-    def get(params \\ []) do
+    def get(params \\ %{}) do
       non_auth_get("/stats", params)
     end
 
@@ -240,7 +259,7 @@ defmodule Bitmex.Rest do
     @doc """
     Get trades.
     """
-    def get(params \\ []) do
+    def get(params \\ %{}) do
       non_auth_get("/trade", params)
     end
 
