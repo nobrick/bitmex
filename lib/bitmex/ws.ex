@@ -11,7 +11,9 @@ defmodule Bitmex.WS do
       @api_key Application.get_env(:bitmex, :api_key)
       @api_secret Application.get_env(:bitmex, :api_secret)
       @fsm_name {:local, __MODULE__}
-      @base "wss://www.bitmex.com/realtime"
+      @test_mode Application.get_env(:bitmex, :test_mode)
+      @base "wss://" <> (@test_mode && "testnet" || "www") <>
+            ".bitmex.com/realtime"
       @ping_interval Application.get_env(:bitmex, :ping_interval, 5_000)
 
       ## API

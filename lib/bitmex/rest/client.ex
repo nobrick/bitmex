@@ -4,9 +4,11 @@ defmodule Bitmex.Rest.Client do
 
   @api_key Application.get_env(:bitmex, :api_key)
   @api_secret Application.get_env(:bitmex, :api_secret)
+  @test_mode Application.get_env(:bitmex, :test_mode)
   @api_host "https://www.bitmex.com"
+  @api_testnet_host "https://testnet.bitmex.com"
   @api_path "/api/v1"
-  @api_uri @api_host <> @api_path
+  @api_uri (@test_mode && @api_testnet_host || @api_host) <> @api_path
 
   def non_auth_get(uri, params \\ []) do
     uri |> uri_with_query(params) |> get
