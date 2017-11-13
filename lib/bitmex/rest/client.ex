@@ -2,6 +2,8 @@ defmodule Bitmex.Rest.Client do
   use GenServer
   alias Bitmex.Rest.{HTTPClient, Requester}
 
+  @compile {:inline, handle_request_call: 4}
+
   ## API
 
   @doc false
@@ -38,25 +40,37 @@ defmodule Bitmex.Rest.Client do
 
   @impl true
   def handle_call({:auth_get, uri, params}, user, state) do
-    {:ok, requester} = Requester.start_link()
-    Requester.request(requester, user, uri, fn ->
-      HTTPClient.auth_get(uri, params, stream_to: requester)
+    handle_request_call(uri, user, state, fn ->
+      HTTPClient.auth_get(uri, params, stream_to: self())
     end)
+  end
+
+  @impl true
+  def handle_call({:auth_post, uri, params}, user, state) do
+    handle_request_call(uri, user, state, fn ->
+      HTTPClient.auth_post(uri, params, stream_to: self())
+    end)
+  end
+
+  @impl true
+  def handle_call({:auth_put, uri, params}, user, state) do
+    handle_request_call(uri, user, state, fn ->
+      HTTPClient.auth_put(uri, params, stream_to: self())
+    end)
+  end
+
+  @impl true
+  def handle_call({:auth_delete, uri, params}, user, state) do
+    handle_request_call(uri, user, state, fn ->
+      HTTPClient.auth_delete(uri, params, stream_to: self())
+    end)
+  end
+
+  ## Helpers
+
+  defp handle_request_call(uri, user, state, fun) do
+    {:ok, requester} = Requester.start_link()
+    Requester.request(requester, user, uri, fun)
     {:noreply, state}
-  end
-
-  @impl true
-  def handle_call({:auth_post, uri, params}, _from, state) do
-    {:reply, HTTPClient.auth_post(uri, params), state}
-  end
-
-  @impl true
-  def handle_call({:auth_put, uri, params}, _from, state) do
-    {:reply, HTTPClient.auth_put(uri, params), state}
-  end
-
-  @impl true
-  def handle_call({:auth_delete, uri, params}, _from, state) do
-    {:reply, HTTPClient.auth_delete(uri, params), state}
   end
 end
