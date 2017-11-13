@@ -14,35 +14,35 @@ defmodule Bitmex.Rest.HTTPClient do
     uri |> uri_with_query(params) |> get
   end
 
-  def auth_get(uri, params \\ []) do
+  def auth_get(uri, params \\ [], opts \\ []) do
     query = uri_with_query(uri, params)
-    get(query, auth_headers(:get, query))
+    get(query, auth_headers(:get, query), set_request_timeouts(opts))
   end
 
-  def auth_post(uri, params) do
-    auth_request(:post, uri, params)
+  def auth_post(uri, params, opts \\ []) do
+    auth_request(:post, uri, params, opts)
   end
 
-  def auth_put(uri, params) do
-    auth_request(:put, uri, params)
+  def auth_put(uri, params, opts \\ []) do
+    auth_request(:put, uri, params, opts)
   end
 
-  def auth_delete(uri, params) do
-    auth_request(:delete, uri, params)
+  def auth_delete(uri, params, opts \\ []) do
+    auth_request(:delete, uri, params, opts)
   end
 
-  def auth_request(verb, uri, params, via \\ :json)
+  def auth_request(verb, uri, params, opts \\ [], via \\ :json)
 
-  def auth_request(verb, uri, params, :url_encoding) do
+  def auth_request(verb, uri, params, opts, :url_encoding) do
     body = encode_query(params)
     headers = verb |> auth_headers(uri, body) |> put_content_type(:params)
-    request(verb, uri, body, headers, [])
+    request(verb, uri, body, headers, set_request_timeouts(opts))
   end
 
-  def auth_request(verb, uri, params, :json) do
+  def auth_request(verb, uri, params, opts, :json) do
     body = Poison.encode!(params)
     headers = verb |> auth_headers(uri, body) |> put_content_type(:json)
-    request(verb, uri, body, headers, [])
+    request(verb, uri, body, headers, set_request_timeouts(opts))
   end
 
   defp put_content_type(headers, :params) do
@@ -57,6 +57,8 @@ defmodule Bitmex.Rest.HTTPClient do
   def uri_with_query(uri, map) when is_map(map) and map_size(map) == 0, do: uri
   def uri_with_query(uri, params), do: "#{uri}?#{encode_query(params)}"
 
+  def api_uri, do: @api_uri
+
   ## Helpers
 
   defp auth_headers(verb, encoded_uri, data \\ "") do
@@ -69,6 +71,12 @@ defmodule Bitmex.Rest.HTTPClient do
 
   defp to_verb_string(verb) do
     verb |> to_string |> String.upcase
+  end
+
+  defp set_request_timeouts(http_opts) do
+    http_opts
+    |> Keyword.put_new(:timeout, :infinity)
+    |> Keyword.put_new(:recv_timeout, :infinity)
   end
 
   ## HTTPoison callbacks

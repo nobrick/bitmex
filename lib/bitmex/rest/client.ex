@@ -1,6 +1,6 @@
 defmodule Bitmex.Rest.Client do
   use GenServer
-  alias Bitmex.Rest.HTTPClient
+  alias Bitmex.Rest.{HTTPClient, Requester}
 
   ## API
 
@@ -14,19 +14,19 @@ defmodule Bitmex.Rest.Client do
   end
 
   def auth_get(server \\ __MODULE__, uri, params) do
-    GenServer.call(server, {:auth_get, uri, params})
+    GenServer.call(server, {:auth_get, uri, params}, :infinity)
   end
 
   def auth_post(server \\ __MODULE__, uri, params) do
-    GenServer.call(server, {:auth_post, uri, params})
+    GenServer.call(server, {:auth_post, uri, params}, :infinity)
   end
 
   def auth_put(server \\ __MODULE__, uri, params) do
-    GenServer.call(server, {:auth_put, uri, params})
+    GenServer.call(server, {:auth_put, uri, params}, :infinity)
   end
 
   def auth_delete(server \\ __MODULE__, uri, params) do
-    GenServer.call(server, {:auth_delete, uri, params})
+    GenServer.call(server, {:auth_delete, uri, params}, :infinity)
   end
 
   ## Callbacks
@@ -37,8 +37,12 @@ defmodule Bitmex.Rest.Client do
   end
 
   @impl true
-  def handle_call({:auth_get, uri, params}, _from, state) do
-    {:reply, HTTPClient.auth_get(uri, params), state}
+  def handle_call({:auth_get, uri, params}, user, state) do
+    {:ok, requester} = Requester.start_link()
+    Requester.request(requester, user, uri, fn ->
+      HTTPClient.auth_get(uri, params, stream_to: requester)
+    end)
+    {:noreply, state}
   end
 
   @impl true
