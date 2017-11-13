@@ -14,8 +14,8 @@ defmodule Bitmex.Rest.RateLimiter do
     GenServer.call(server, {:set_rate, headers})
   end
 
-  def rate(server \\ __MODULE__) do
-    GenServer.call(server, :rate)
+  def get(server \\ __MODULE__) do
+    GenServer.call(server, :get)
   end
 
   def remaining(server \\ __MODULE__) do
@@ -39,7 +39,7 @@ defmodule Bitmex.Rest.RateLimiter do
   end
 
   @impl true
-  def handle_call(:rate, _from, %{rate: rate} = state) do
+  def handle_call(:get, _from, %{rate: rate} = state) do
     {:reply, rate, state}
   end
 
