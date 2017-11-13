@@ -8,6 +8,9 @@ defmodule Bitmex.Application do
 
     children = [
       worker(Bitmex.Rest.Client, [[name: Bitmex.Rest.Client]],
+             max_restarts: Infinity),
+
+      worker(Bitmex.Rest.RateLimiter, [[name: Bitmex.Rest.RateLimiter]],
              max_restarts: Infinity)
     ]
 

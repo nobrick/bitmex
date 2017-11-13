@@ -1,7 +1,7 @@
 defmodule Bitmex.Rest.Requester do
   use GenServer
   require Logger
-  alias Bitmex.Rest.HTTPClient
+  alias Bitmex.Rest.{HTTPClient, RateLimiter}
 
   ## API
   
@@ -43,6 +43,7 @@ defmodule Bitmex.Rest.Requester do
 
   @impl true
   def handle_info(%HTTPoison.AsyncHeaders{headers: headers}, state) do
+    RateLimiter.set_rate(headers)
     {:noreply, Map.put(state, :headers, headers)}
   end
 
