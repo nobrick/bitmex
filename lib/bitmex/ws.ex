@@ -1,6 +1,8 @@
 defmodule Bitmex.WS do
   @moduledoc """
   BitMEX WebSocket client.
+
+  Behind the scenes, this module uses :websocket_client erlang libray.
   """
 
   import Logger, only: [info: 1, warn: 1]
@@ -17,17 +19,14 @@ defmodule Bitmex.WS do
       @ping_interval Application.get_env(:bitmex, :ping_interval, 5_000)
 
       ## API
+
       def start_link(args \\ %{}) do
         :crypto.start()
         :ssl.start()
-        base =
-          if args[:remote_heartbeat] do
-            @base <> "?heartbeat=true"
-          else
-            @base
-          end
-        :websocket_client.start_link(@fsm_name, base, __MODULE__, args, [])
+        :websocket_client.start_link(@fsm_name, @base, __MODULE__, args, [])
       end
+
+      def start_link(args, _), do: start_link(args)
 
       def send_op(server, op, args) do
         :websocket_client.send(server, {:text, Bitmex.WS.encode(op, args)})
@@ -50,7 +49,7 @@ defmodule Bitmex.WS do
       ## Callbacks
 
       def init(args) do
-        subscription = args[:subscribe] || ["orderBook10:XBTUSD"]
+        subscription = args[:subscribe] || ["orderBookL2:XBTUSD"]
         auth_subscription = args[:auth_subscribe] || []
         ping_interval = args[:ping_interval] || @ping_interval
         {:once, %{subscribe: subscription, auth_subscribe: auth_subscription,
