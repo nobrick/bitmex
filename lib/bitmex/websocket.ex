@@ -98,8 +98,10 @@ defmodule Bitmex.Websocket do
           send_after(self(), {:heartbeat, :ping, heartbeat + 1}, 1_000)
           {:ok, state}
         else
-          Logger.warn("#{__MODULE__} sent heartbeat ##{heartbeat} " <>
-                      "due to low connectivity")
+          if not(@test_mode) do
+            Logger.warn("#{__MODULE__} sent heartbeat ##{heartbeat} " <>
+                        "due to low connectivity")
+          end
           send_after(self(), {:heartbeat, :pong, heartbeat + 1}, 4_000)
           {:reply, :ping, state}
         end
