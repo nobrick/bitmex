@@ -143,9 +143,16 @@ defmodule Bitmex.Websocket do
       end
 
       @impl true
-      def handle_info(msg, state) do
-        Logger.error("#{__MODULE__} received unexpected message: " <>
-                     "#{inspect msg}\nstate: #{inspect state}")
+      def handle_info({:ssl_closed, _} = error, state) do
+        # Use Kernel.exit/1 here instead if returning {:close, state} does not
+        # make the underlining WebSockex to properly terminate the server.
+        output_error(error, state, "received ssl_closed error")
+        {:close, state}
+      end
+
+      @impl true
+      def handle_info(error, state) do
+        output_error(error, state, "received unexpected message")
         {:ok, state}
       end
 
@@ -172,6 +179,11 @@ defmodule Bitmex.Websocket do
 
       defp inc_heartbeat(%{heartbeat: heartbeat} = state) do
         Map.put(state, :heartbeat, heartbeat + 1)
+      end
+
+      defp output_error(error, state, msg) do
+        Logger.error("#{__MODULE__} #{msg}: #{inspect(error)}" <>
+                     "\nstate: #{inspect(state)}")
       end
 
       defoverridable [handle_response: 1]
