@@ -7,7 +7,9 @@ defmodule Bitmex.Mixfile do
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     description: "A BitMEX client",
+     description: "BitMEX client library for Elixir",
+     source_url: "https://github.com/nobrick/bitmex",
+     homepage_url: "https://github.com/nobrick/bitmex",
      package: package(),
      deps: deps()]
   end
