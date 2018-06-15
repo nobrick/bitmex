@@ -23,7 +23,7 @@ defmodule Bitmex.Rest.RateLimiter do
   end
 
   ## Callbacks
-  #
+
   @impl true
   def init(_) do
     {:ok, %{rate: %{limit: @max_rate_limit, remaining: @max_rate_limit,
