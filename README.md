@@ -130,7 +130,6 @@ defmodule Caravan.WS do
     Logger.info "Subscribed #{table}"
     # ...
   end
-  end
 
   @doc """
   Handles unexpected data.
