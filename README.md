@@ -52,10 +52,8 @@ Bitmex.Rest.Order.create(params_bi)
 Create a bulk order:
 ```elixir
 p1 = %{"symbol" => "XBTUSD", "side" => "Buy", "orderQty" => 15,
-       "price" => Float.floor(4000.1, 1), "ordType" => "Limit"}
-p2 = %{"symbol" => "XBTUSD", "side" => "Buy", "orderQty" => 15,
-       "price" => 4100.2, "ordType" => "Limit"}
-Bitmex.Rest.Order.create_bulk(%{orders: [p1, p2]})
+       "price" => 4000.1, "ordType" => "Limit"}
+Bitmex.Rest.Order.create_bulk(%{orders: [p1, p1]})
 ```
 
 ### Rate Limit
