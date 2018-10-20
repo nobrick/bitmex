@@ -24,7 +24,7 @@ defmodule Bitmex.Mixfile do
      {:websocket_client, "~> 1.2.1"},
      {:websockex, "~> 0.4.0"},
      {:poison, "~> 3.1.0"},
-     {:httpoison, "~> 0.13.0"}]
+     {:httpoison, "~> 1.0"}]
   end
 
   defp package do

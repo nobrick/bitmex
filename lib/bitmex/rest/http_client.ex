@@ -81,7 +81,7 @@ defmodule Bitmex.Rest.HTTPClient do
 
   ## HTTPoison callbacks
 
-  def process_url(url), do: @api_uri <> url
+  def process_request_url(url), do: @api_uri <> url
 
   def process_response_body(body), do: Poison.decode!(body)
 
