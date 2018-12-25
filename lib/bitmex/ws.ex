@@ -91,7 +91,7 @@ defmodule Bitmex.WS do
             %{"request" => %{"op" => "authKey"}, "success" => true} ->
               subscribe(self(), auth_subscription)
             _ ->
-              handle_response(resp)
+              handle_response(resp, state)
           end
         else
           e ->
@@ -111,7 +111,7 @@ defmodule Bitmex.WS do
         :ok
       end
 
-      def handle_response(resp) do
+      def handle_response(resp, _state) do
         info("#{__MODULE__} received response: #{inspect resp}")
       end
 
