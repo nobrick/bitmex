@@ -52,8 +52,9 @@ defmodule Bitmex.WS do
         subscription = args[:subscribe] || ["orderBookL2:XBTUSD"]
         auth_subscription = args[:auth_subscribe] || []
         ping_interval = args[:ping_interval] || @ping_interval
+        trading_pair_id = args[:trading_pair_id]
         {:once, %{subscribe: subscription, auth_subscribe: auth_subscription,
-                  ping_interval: ping_interval}}
+                  ping_interval: ping_interval, trading_pair_id: trading_pair_id}}
       end
 
       def onconnect(_ws_req, %{subscribe: subscription,
