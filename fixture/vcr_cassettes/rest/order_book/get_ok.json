@@ -1,0 +1,34 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Accept": "application/json",
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://www.bitmex.com/api/v1/orderBook/L2?symbol=XBTUSD"
+    },
+    "response": {
+      "binary": false,
+      "body": "[{\"symbol\":\"XBTUSD\",\"id\":8799553700,\"side\":\"Sell\",\"size\":50125,\"price\":4463},{\"symbol\":\"XBTUSD\",\"id\":8799553750,\"side\":\"Sell\",\"size\":30548,\"price\":4462.5},{\"symbol\":\"XBTUSD\",\"id\":8799553800,\"side\":\"Sell\",\"size\":121512,\"price\":4462},{\"symbol\":\"XBTUSD\",\"id\":8799553850,\"side\":\"Sell\",\"size\":3266,\"price\":4461.5},{\"symbol\":\"XBTUSD\",\"id\":8799553900,\"side\":\"Sell\",\"size\":54228,\"price\":4461},{\"symbol\":\"XBTUSD\",\"id\":8799553950,\"side\":\"Sell\",\"size\":12575,\"price\":4460.5},{\"symbol\":\"XBTUSD\",\"id\":8799554000,\"side\":\"Sell\",\"size\":110905,\"price\":4460},{\"symbol\":\"XBTUSD\",\"id\":8799554050,\"side\":\"Sell\",\"size\":135,\"price\":4459.5},{\"symbol\":\"XBTUSD\",\"id\":8799554100,\"side\":\"Sell\",\"size\":21780,\"price\":4459},{\"symbol\":\"XBTUSD\",\"id\":8799554150,\"side\":\"Sell\",\"size\":2901,\"price\":4458.5},{\"symbol\":\"XBTUSD\",\"id\":8799554200,\"side\":\"Sell\",\"size\":9354,\"price\":4458},{\"symbol\":\"XBTUSD\",\"id\":8799554250,\"side\":\"Sell\",\"size\":46541,\"price\":4457.5},{\"symbol\":\"XBTUSD\",\"id\":8799554300,\"side\":\"Sell\",\"size\":7491,\"price\":4457},{\"symbol\":\"XBTUSD\",\"id\":8799554350,\"side\":\"Sell\",\"size\":35514,\"price\":4456.5},{\"symbol\":\"XBTUSD\",\"id\":8799554400,\"side\":\"Sell\",\"size\":19725,\"price\":4456},{\"symbol\":\"XBTUSD\",\"id\":8799554450,\"side\":\"Sell\",\"size\":80030,\"price\":4455.5},{\"symbol\":\"XBTUSD\",\"id\":8799554500,\"side\":\"Sell\",\"size\":57898,\"price\":4455},{\"symbol\":\"XBTUSD\",\"id\":8799554550,\"side\":\"Sell\",\"size\":16200,\"price\":4454.5},{\"symbol\":\"XBTUSD\",\"id\":8799554600,\"side\":\"Sell\",\"size\":4320,\"price\":4454},{\"symbol\":\"XBTUSD\",\"id\":8799554650,\"side\":\"Sell\",\"size\":13040,\"price\":4453.5},{\"symbol\":\"XBTUSD\",\"id\":8799554700,\"side\":\"Sell\",\"size\":28900,\"price\":4453},{\"symbol\":\"XBTUSD\",\"id\":8799554750,\"side\":\"Sell\",\"size\":26855,\"price\":4452.5},{\"symbol\":\"XBTUSD\",\"id\":8799554800,\"side\":\"Sell\",\"size\":31782,\"price\":4452},{\"symbol\":\"XBTUSD\",\"id\":8799554850,\"side\":\"Sell\",\"size\":29495,\"price\":4451.5},{\"symbol\":\"XBTUSD\",\"id\":8799554900,\"side\":\"Sell\",\"size\":522827,\"price\":4451},{\"symbol\":\"XBTUSD\",\"id\":8799554950,\"side\":\"Buy\",\"size\":397307,\"price\":4450.5},{\"symbol\":\"XBTUSD\",\"id\":8799555000,\"side\":\"Buy\",\"size\":349205,\"price\":4450},{\"symbol\":\"XBTUSD\",\"id\":8799555050,\"side\":\"Buy\",\"size\":28463,\"price\":4449.5},{\"symbol\":\"XBTUSD\",\"id\":8799555100,\"side\":\"Buy\",\"size\":5345,\"price\":4449},{\"symbol\":\"XBTUSD\",\"id\":8799555150,\"side\":\"Buy\",\"size\":6293,\"price\":4448.5},{\"symbol\":\"XBTUSD\",\"id\":8799555200,\"side\":\"Buy\",\"size\":29896,\"price\":4448},{\"symbol\":\"XBTUSD\",\"id\":8799555250,\"side\":\"Buy\",\"size\":784,\"price\":4447.5},{\"symbol\":\"XBTUSD\",\"id\":8799555300,\"side\":\"Buy\",\"size\":125724,\"price\":4447},{\"symbol\":\"XBTUSD\",\"id\":8799555350,\"side\":\"Buy\",\"size\":105715,\"price\":4446.5},{\"symbol\":\"XBTUSD\",\"id\":8799555400,\"side\":\"Buy\",\"size\":15297,\"price\":4446},{\"symbol\":\"XBTUSD\",\"id\":8799555450,\"side\":\"Buy\",\"size\":10316,\"price\":4445.5},{\"symbol\":\"XBTUSD\",\"id\":8799555500,\"side\":\"Buy\",\"size\":230505,\"price\":4445},{\"symbol\":\"XBTUSD\",\"id\":8799555550,\"side\":\"Buy\",\"size\":21393,\"price\":4444.5},{\"symbol\":\"XBTUSD\",\"id\":8799555600,\"side\":\"Buy\",\"size\":31283,\"price\":4444},{\"symbol\":\"XBTUSD\",\"id\":8799555650,\"side\":\"Buy\",\"size\":148206,\"price\":4443.5},{\"symbol\":\"XBTUSD\",\"id\":8799555700,\"side\":\"Buy\",\"size\":126788,\"price\":4443},{\"symbol\":\"XBTUSD\",\"id\":8799555750,\"side\":\"Buy\",\"size\":168663,\"price\":4442.5},{\"symbol\":\"XBTUSD\",\"id\":8799555800,\"side\":\"Buy\",\"size\":222179,\"price\":4442},{\"symbol\":\"XBTUSD\",\"id\":8799555850,\"side\":\"Buy\",\"size\":121781,\"price\":4441.5},{\"symbol\":\"XBTUSD\",\"id\":8799555900,\"side\":\"Buy\",\"size\":52698,\"price\":4441},{\"symbol\":\"XBTUSD\",\"id\":8799555950,\"side\":\"Buy\",\"size\":43945,\"price\":4440.5},{\"symbol\":\"XBTUSD\",\"id\":8799556000,\"side\":\"Buy\",\"size\":267319,\"price\":4440},{\"symbol\":\"XBTUSD\",\"id\":8799556050,\"side\":\"Buy\",\"size\":100322,\"price\":4439.5},{\"symbol\":\"XBTUSD\",\"id\":8799556100,\"side\":\"Buy\",\"size\":344169,\"price\":4439},{\"symbol\":\"XBTUSD\",\"id\":8799556150,\"side\":\"Buy\",\"size\":31400,\"price\":4438.5}]",
+      "headers": {
+        "Date": "Wed, 21 Nov 2018 23:02:51 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Length": "3831",
+        "Connection": "keep-alive",
+        "Set-Cookie": "AWSALB=F4XrAOlohQsK23052V1HMg0kq85UKOkEmZ+h4PUAp2wOhbNibW9qESaI3BDLZwlumUU0+XkS9Qpc09Zj7M7NaawhOOlv+yfOu18zGJ4CPSGG8iEYXq/t64wjX1ne; Expires=Wed, 28 Nov 2018 23:02:51 GMT; Path=/",
+        "X-RateLimit-Limit": "150",
+        "X-RateLimit-Remaining": "149",
+        "X-RateLimit-Reset": "1542841372",
+        "X-Powered-By": "Profit",
+        "ETag": "W/\"ef7-lEU0wbf/MecTl5AIv38rFN1mTGc\"",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
