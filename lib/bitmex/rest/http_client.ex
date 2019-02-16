@@ -10,6 +10,14 @@ defmodule Bitmex.Rest.HTTPClient do
   @api_path "/api/v1"
   @api_uri (@test_mode && @api_testnet_host || @api_host) <> @api_path
 
+  def api_host(:testnet) do
+    @api_testnet_host
+  end
+
+  def api_host(:mainnet) do
+    @api_host
+  end
+
   def non_auth_get(uri, params \\ []) do
     uri |> uri_with_query(params) |> get
   end
