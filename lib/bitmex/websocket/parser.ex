@@ -37,7 +37,7 @@ defmodule Bitmex.Websocket.Parser do
   end
 
   def handle_cast({:parse_json, text}, client) do
-    send(client, {:parse_json, Poison.Parser.parse(text)})
+    send(client, {:parse_json, Poison.decode(text)})
     {:noreply, client}
   end
 end
