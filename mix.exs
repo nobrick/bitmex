@@ -22,7 +22,7 @@ defmodule Bitmex.Mixfile do
 
   defp deps do
     [
-      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:ex_doc, ">= 0.18.0", only: :dev, runtime: false},
       {:websocket_client, "~> 1.3.0"},
       {:websockex, "~> 0.4.0"},
       {:poison, "~> 4.0.0"},
