@@ -1,4 +1,7 @@
 # BitMEX
+
+[![CircleCI](https://circleci.com/gh/nobrick/bitmex.svg?style=shield)](https://circleci.com/gh/nobrick/bitmex)
+
 BitMEX client library for Elixir.
 
 ## Documentation
